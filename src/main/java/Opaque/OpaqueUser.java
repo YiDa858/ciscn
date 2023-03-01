@@ -1,11 +1,18 @@
+package Opaque;
+
+import FIDO.FidoUser;
+
 public class OpaqueUser {
     private String name;
     private String password;
+    
+    private String userGroup;
 
     /**
      * 测试使用的构造方法
      */
-    public OpaqueUser() {
+    public OpaqueUser(String UserGroup) {
+        this.userGroup = UserGroup;
         this.name = "liu";
         this.password = "yaowen";
     }
@@ -31,6 +38,6 @@ public class OpaqueUser {
 
     public OpaqueUser getUserInfo(FidoUser FidoUser) {
         // TODO: 在数据库中通过FidoUser的用户名查询OPAQUE用户的用户名，进而获取相关信息
-        return new OpaqueUser();
+        return new OpaqueUser(userGroup);
     }
 }
