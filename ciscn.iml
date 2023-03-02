@@ -18,8 +18,8 @@
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.2.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.yubico:webauthn-server-core:2.1.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.yubico:yubico-util:2.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.yubico:webauthn-server-core:2.4.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.yubico:yubico-util:2.4.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.14.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2" level="project" />
@@ -40,5 +40,6 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.httpcomponents.client5:httpclient5:5.2.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.httpcomponents.core5:httpcore5:5.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.httpcomponents.core5:httpcore5-h2:5.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.yubico:webauthn-server-attestation:2.4.0" level="project" />
   </component>
 </module>
