@@ -1,16 +1,43 @@
 package FIDO;
-import com.yubico.webauthn.*;
-import com.yubico.webauthn.RegisteredCredential;
-import com.yubico.webauthn.RelyingParty;
-import com.yubico.webauthn.attestation.*;
+import FIDO.mapper.UserMapper;
 import com.yubico.webauthn.data.*;
-import com.yubico.webauthn.exception.RegistrationFailedException;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import java.util.Base64;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 public class FidoServer {
+    private String rp_ID="Test";
+    private String mybatisResource = "mybatis-config.xml";
+    private SqlSessionFactory sqlSessionFactory;
+    private String[] encryptType = new String[]{""};
+
+    public FidoServer() throws IOException {
+        InputStream inputStream = Resources.getResourceAsStream(mybatisResource);
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    }
+
+    public boolean isRegister(int userid){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        List<FidoUser> ans = userMapper.getUserByID(userid);
+        if (ans.isEmpty()){
+            return false;
+        }else {
+            return true;
+        }
+    }
+    public void fidoRegister(String userName,String userPubKey){
+        SqlSession sqlSession = sqlSessionFactory.openSession(true);
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        FidoUser fidoUser =new FidoUser(userName, userPubKey);
+        userMapper.insertNewUser(fidoUser);
+        System.out.println("Successfully register a new user: id: "+fidoUser.getUserid()+" /name: "+userName);
+    }
 
     /**
      * 生成并获取挑战Challenge。随机生成Challenge并进行base64编码
@@ -30,7 +57,7 @@ public class FidoServer {
      * 测试FidoServer
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         FidoServer fidoServer = new FidoServer();
         System.out.println(fidoServer.generateChallenge());
     }
@@ -148,6 +175,3 @@ public class FidoServer {
 //        // authentication succeeded
 //    }
 }
-
-
-
