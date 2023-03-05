@@ -68,6 +68,10 @@
       <updated>1677771240160</updated>
       <workItem from="1677771241077" duration="525000" />
       <workItem from="1677771775296" duration="240000" />
+      <workItem from="1677831514831" duration="2189000" />
+      <workItem from="1677833714173" duration="834000" />
+      <workItem from="1677834951781" duration="7569000" />
+      <workItem from="1677861906300" duration="4282000" />
     </task>
     <task id="LOCAL-00001" summary="init new branch">
       <created>1677771731404</created>
@@ -83,7 +87,7 @@
       <option name="project" value="LOCAL" />
       <updated>1677771791572</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -91,7 +95,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init new branch" />
-    <option name="LAST_COMMIT_MESSAGE" value="init new branch" />
+    <MESSAGE value="创建数据库连接，添加服务器用户注册方法" />
+    <option name="LAST_COMMIT_MESSAGE" value="创建数据库连接，添加服务器用户注册方法" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
