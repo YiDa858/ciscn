@@ -7,6 +7,7 @@ import com.yubico.webauthn.data.PublicKeyCredentialDescriptor;
 import com.yubico.webauthn.data.PublicKeyCredentialType;
 import service.FidoService;
 
+import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -14,42 +15,65 @@ import java.util.Set;
 
 public class CredentialRepositoryImpl implements CredentialRepository {
     private FidoService service = new FidoService();
+
     /**
      * 获取使用给定用户名注册给用户的所有凭据的凭据ID
      * 成功注册后，RegistrationResult.getKeyId()方法返回一个适合包含在此集合中的值
      * Get the credential IDs of all credentials registered to the user with the given username
      * After a successful registration ceremony, the RegistrationResult.getKeyId() method returns a value suitable for inclusion in this set.
      *
-     * @param username
-     * @return
+     * @param username 用户名
+     * @return 返回用户名对应的凭证列表
      */
     @Override
     public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String username) {
-        byte[] credentialIds = service.getCredentialIdByName(username);
+        // 获取用户名对应的凭证列表
+        List<byte[]> credentialIds = service.getCredentialIdByName(username);
+
+        // 将凭证列表转换为结果类型
         Set<PublicKeyCredentialDescriptor> result = new HashSet<>();
         for (byte[] credentialId : credentialIds) {
-            result.add(new PublicKeyCredentialDescriptor(
-                    PublicKeyCredentialType.PUBLIC_KEY, credentialId, null));
+            // PublicKeyCredentialDescriptor类需要使用builder构造方法
+            // 指定id为凭证id
+            // 指定类型为公钥
+            // 不设置transports属性，WebAuthn API 会自动选择与身份验证器通信的最佳传输方式
+            PublicKeyCredentialDescriptor publicKeyCredentialDescriptor = PublicKeyCredentialDescriptor.builder()
+                    .id(new ByteArray(credentialId))
+                    .type(PublicKeyCredentialType.PUBLIC_KEY)
+                    .build();
+            result.add(publicKeyCredentialDescriptor);
         }
         return result;
     }
 
     /**
-     * 获取与给定用户名对应的用户句柄-getUsernameForUserHandle（ByteArray）的倒数
+     * 获取与给定用户名对应的用户句柄-与getUsernameForUserHandle（ByteArray）相反
      * 用于根据用户名查找用户句柄，用于已经给定用户名的身份验证仪式
      * Get the user handle corresponding to the given username - the inverse of getUsernameForUserHandle(ByteArray).
      * Used to look up the user handle based on the username, for authentication ceremonies where the username is already given.
      *
-     * @param username
-     * @return
+     * @param username 用户名
+     * @return 返回用户名对应的用户句柄
      */
     @Override
     public Optional<ByteArray> getUserHandleForUsername(String username) {
-        return Optional.empty();
+        // 获取用户的id作为句柄
+        int id = service.getIdByName(username);
+
+        // 用户名不存在
+        if (id == -1) {
+            return null;
+        }
+
+        // 将int类型转换为ByteArray类型
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.putInt(id);
+        byte[] idBytes = buffer.array();
+        return Optional.of(new ByteArray(idBytes));
     }
 
     /**
-     * 获取与给定用户句柄对应的用户名-getUserHandleForUsername（String）的倒数
+     * 获取与给定用户句柄对应的用户名-与getUserHandleForUsername（String）相反
      * 用于基于用户句柄查找用户名，用于无用户名身份验证仪式
      * Get the username corresponding to the given user handle - the inverse of getUserHandleForUsername(String).
      * Used to look up the username based on the user handle, for username-less authentication ceremonies.
