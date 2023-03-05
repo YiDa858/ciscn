@@ -9,7 +9,7 @@ import java.io.IOException;
 public class FidoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
 
         // 1. 生成验证挑战
 

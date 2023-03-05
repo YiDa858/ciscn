@@ -1,0 +1,13 @@
+service\FidoService.class
+old\FIDO\FidoServer.class
+web\FidoServlet.class
+util\FidoUtil.class
+old\FIDO\Opaque\OpaqueClient.class
+util\SqlSessionFactoryUtils.class
+pojo\OpaqueUser.class
+service\OpaqueService.class
+mapper\FidoUserMapper.class
+pojo\FidoUser.class
+util\OpaqueUitl.class
+old\FIDO\Opaque\OpaqueServer.class
+old\FIDO\Opaque\Main.class

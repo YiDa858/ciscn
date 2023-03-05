@@ -1,0 +1,5 @@
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:16:39:15 +0800] "GET /ciscn HTTP/1.1" 302 - http-bio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:16:39:16 +0800] "GET /ciscn/ HTTP/1.1" 404 963 http-bio-8080-exec-3 13
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:16:39:16 +0800] "GET /favicon.ico HTTP/1.1" 404 - http-bio-8080-exec-4 0
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:16:39:35 +0800] "GET /ciscn/FidoServlet HTTP/1.1" 404 981 http-bio-8080-exec-5 3
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:16:43:26 +0800] "GET /ciscn/FidoServlet HTTP/1.1" 200 88 http-bio-8080-exec-1 370
