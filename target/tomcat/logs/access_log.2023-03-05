@@ -3,3 +3,13 @@
 0:0:0:0:0:0:0:1 - - [05/Mar/2023:16:39:16 +0800] "GET /favicon.ico HTTP/1.1" 404 - http-bio-8080-exec-4 0
 0:0:0:0:0:0:0:1 - - [05/Mar/2023:16:39:35 +0800] "GET /ciscn/FidoServlet HTTP/1.1" 404 981 http-bio-8080-exec-5 3
 0:0:0:0:0:0:0:1 - - [05/Mar/2023:16:43:26 +0800] "GET /ciscn/FidoServlet HTTP/1.1" 200 88 http-bio-8080-exec-1 370
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:18:49:32 +0800] "GET /ciscn HTTP/1.1" 302 - http-bio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:18:49:32 +0800] "GET /ciscn/ HTTP/1.1" 200 88 http-bio-8080-exec-3 24
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:18:49:32 +0800] "GET /favicon.ico HTTP/1.1" 404 - http-bio-8080-exec-4 0
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:18:49:45 +0800] "GET /ciscn/register HTTP/1.1" 500 2327 http-bio-8080-exec-5 145
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:18:50:43 +0800] "GET /ciscn/register HTTP/1.1" 500 2327 http-bio-8080-exec-6 3
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:18:51:54 +0800] "GET /ciscn HTTP/1.1" 302 - http-bio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:18:51:54 +0800] "GET /ciscn/ HTTP/1.1" 200 88 http-bio-8080-exec-3 21
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:18:51:57 +0800] "GET /ciscn/register HTTP/1.1" 500 2327 http-bio-8080-exec-4 125
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:18:56:48 +0800] "GET /ciscn/register HTTP/1.1" 200 88 http-bio-8080-exec-1 404
+0:0:0:0:0:0:0:1 - - [05/Mar/2023:19:00:37 +0800] "GET /ciscn/register HTTP/1.1" 200 88 http-bio-8080-exec-1 417

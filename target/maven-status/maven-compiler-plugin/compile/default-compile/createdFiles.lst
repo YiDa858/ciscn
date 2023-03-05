@@ -1,6 +1,6 @@
+web\RegisterFidoServlet.class
 service\FidoService.class
 old\FIDO\FidoServer.class
-web\FidoServlet.class
 util\FidoUtil.class
 old\FIDO\Opaque\OpaqueClient.class
 util\SqlSessionFactoryUtils.class

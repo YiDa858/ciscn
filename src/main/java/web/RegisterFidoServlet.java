@@ -1,12 +1,15 @@
 package web;
 
+import service.FidoService;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet("/FidoServlet")
-public class FidoServlet extends HttpServlet {
+@WebServlet("/register")
+public class RegisterFidoServlet extends HttpServlet {
+    private FidoService fidoService = new FidoService();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/index.jsp").forward(request, response);

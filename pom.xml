@@ -52,30 +52,11 @@
             <artifactId>standard</artifactId>
             <version>1.1.2</version>
         </dependency>
-        <!--junit单元测试-->
+        <!--WebAuthn4J-->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- 添加slf4j日志api -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.20</version>
-        </dependency>
-        <!-- 添加logback-classic依赖 -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-        <!-- 添加logback-core依赖 -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>1.2.3</version>
+            <groupId>com.webauthn4j</groupId>
+            <artifactId>webauthn4j-core</artifactId>
+            <version>0.20.8.RELEASE</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.yubico/webauthn-server-core -->
         <dependency>
@@ -90,6 +71,32 @@
         <!--    <artifactId>webauthn-server-attestation</artifactId>-->
         <!--    <version>2.4.0</version>-->
         <!--    <scope>runtime</scope>-->
+        <!--</dependency>-->
+
+        <!--junit单元测试-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
+            <scope>test</scope>
+        </dependency>
+        <!--&lt;!&ndash; 添加slf4j日志api &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--    <groupId>org.slf4j</groupId>-->
+        <!--    <artifactId>slf4j-api</artifactId>-->
+        <!--    <version>1.7.20</version>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; 添加logback-classic依赖 &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--    <groupId>ch.qos.logback</groupId>-->
+        <!--    <artifactId>logback-classic</artifactId>-->
+        <!--    <version>1.2.3</version>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; 添加logback-core依赖 &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--    <groupId>ch.qos.logback</groupId>-->
+        <!--    <artifactId>logback-core</artifactId>-->
+        <!--    <version>1.2.3</version>-->
         <!--</dependency>-->
     </dependencies>
     <build>
