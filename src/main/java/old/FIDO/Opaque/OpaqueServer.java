@@ -1,4 +1,4 @@
-package OPAQUE;
+package old.FIDO.Opaque;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
