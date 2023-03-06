@@ -3,34 +3,43 @@ package pojo;
 import java.util.Arrays;
 
 public class FidoUser {
-    private int id;
-    private String username;
+    private int userId;
+    private String userName;
+    private byte[] userHandle;
 
-    public FidoUser(String username) {
-        this.username = username;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public FidoUser() {
     }
 
     @Override
     public String toString() {
         return "FidoUser{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
+                "userId=" + userId +
+                ", username='" + userName + '\'' +
+                ", userHandle=" + Arrays.toString(userHandle) +
                 '}';
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public byte[] getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(byte[] userHandle) {
+        this.userHandle = userHandle;
     }
 }

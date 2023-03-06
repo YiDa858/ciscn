@@ -5,25 +5,32 @@
 
 <mapper namespace="mapper.FidoUserMapper">
     <resultMap id="fidoUserResultMap" type="pojo.FidoUser">
-        <id property="id" column="id"/>
-        <result property="username" column="username"/>
+        <id property="userId" column="userId"/>
+        <result property="userName" column="userName"/>
+        <result property="userHandle" column="userHandle" jdbcType="BLOB"/>
     </resultMap>
 
     <select id="getUserByID" resultMap="fidoUserResultMap">
         SELECT *
         FROM fidouser
-        WHERE id = #{id};
+        WHERE userId = #{userId};
     </select>
 
     <select id="getUserByName" resultMap="fidoUserResultMap">
         SELECT *
         FROM fidouser
-        WHERE username = #{username};
+        WHERE userName = #{userName};
     </select>
 
-    <insert id="insertNewUser" useGeneratedKeys="true" keyProperty="id">
+    <select id="getUserByHandle" resultMap="fidoUserResultMap">
+        SELECT *
+        FROM fidouser
+        WHERE userHandle = #{userHandle};
+    </select>
+
+    <insert id="insertNewUser" useGeneratedKeys="true" keyProperty="userId">
         INSERT
-        INTO fidouser(username)
-        VALUES (#{username});
+        INTO fidouser(userName, userHandle)
+        VALUES (#{userName}, #{userHandle});
     </insert>
 </mapper>

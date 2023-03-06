@@ -2,6 +2,7 @@ package util;
 
 import com.yubico.webauthn.data.ByteArray;
 
+import java.nio.ByteBuffer;
 import java.util.Base64;
 import java.util.Random;
 
@@ -12,7 +13,7 @@ public class FidoUtil {
      * @return 一个ByteArray数组
      * TODO:确认返回类型是ByteArray还是Base64.getEncoder().encodeToString(challengeBytes)
      */
-    public ByteArray generateChallenge(){
+    public ByteArray generateChallenge() {
         byte[] challengeBytes = new byte[32];
         new Random().nextBytes(challengeBytes);
         System.out.println(Base64.getEncoder().encodeToString(challengeBytes));

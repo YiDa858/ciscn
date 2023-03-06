@@ -4,20 +4,24 @@ import java.util.Arrays;
 
 public class Credential {
     private int id;
+    private byte[] credentialId;
     private int userId;
-    private byte[] publicKey;
+    private byte[] userHandle;
+    private byte[] publicKeyCose;
+    private int signatureCount;
 
-    public Credential(int userId, byte[] publicKey) {
-        this.userId = userId;
-        this.publicKey = publicKey;
+    public Credential() {
     }
 
     @Override
     public String toString() {
         return "Credential{" +
                 "id=" + id +
+                ", credentialId=" + Arrays.toString(credentialId) +
                 ", userId=" + userId +
-                ", publicKey=" + Arrays.toString(publicKey) +
+                ", userHandle=" + Arrays.toString(userHandle) +
+                ", publicKeyCose=" + Arrays.toString(publicKeyCose) +
+                ", signatureCount=" + signatureCount +
                 '}';
     }
 
@@ -29,6 +33,14 @@ public class Credential {
         this.id = id;
     }
 
+    public byte[] getCredentialId() {
+        return credentialId;
+    }
+
+    public void setCredentialId(byte[] credentialId) {
+        this.credentialId = credentialId;
+    }
+
     public int getUserId() {
         return userId;
     }
@@ -37,11 +49,27 @@ public class Credential {
         this.userId = userId;
     }
 
-    public byte[] getPublicKey() {
-        return publicKey;
+    public byte[] getUserHandle() {
+        return userHandle;
     }
 
-    public void setPublicKey(byte[] publicKey) {
-        this.publicKey = publicKey;
+    public void setUserHandle(byte[] userHandle) {
+        this.userHandle = userHandle;
+    }
+
+    public byte[] getPublicKeyCose() {
+        return publicKeyCose;
+    }
+
+    public void setPublicKeyCose(byte[] publicKeyCose) {
+        this.publicKeyCose = publicKeyCose;
+    }
+
+    public int getSignatureCount() {
+        return signatureCount;
+    }
+
+    public void setSignatureCount(int signatureCount) {
+        this.signatureCount = signatureCount;
     }
 }

@@ -43,7 +43,7 @@ public class FidoService {
      *
      * @param username 用户名
      */
-    public void RegisterFidoUser(String username) {
+    public void RegisterFidoUser(String username, byte[] userHanle) {
         // 判断用户名是否已经注册过
         if (isRegistered(username)) {
             System.out.println("[+] service.FidoService.RegisterFidoUser: Username " + username + " is already in use.");
@@ -54,12 +54,15 @@ public class FidoService {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         FidoUserMapper fidoUserMapper = sqlSession.getMapper(FidoUserMapper.class);
 
+        // TODO: 为用户创建凭证
+
         // 新建FidoUser对象并注册
-        FidoUser fidoUser = new FidoUser(username);
+        FidoUser fidoUser = new FidoUser();
+        fidoUser.setUserName(username);
+        fidoUser.setUserHandle(userHanle);
+
         fidoUserMapper.insertNewUser(fidoUser);
         System.out.println("[+] service.FidoService.RegisterFidoUser: " + fidoUser);
-
-        // TODO: 为用户创建凭证
 
         // 提交事务
         try {
@@ -90,13 +93,13 @@ public class FidoService {
         CredentialMapper credentialMapper = sqlSession.getMapper(CredentialMapper.class);
 
         // 查询用户名对应的凭证对象
-        List<Credential> credentials = credentialMapper.getCredentialsByName(username);
+        List<Credential> credentials = credentialMapper.getCredentialsByUserName(username);
 
         // 获取对应的凭证
         List<byte[]> credentialIds = new ArrayList<>();
         for (Credential credential : credentials) {
             System.out.println("[+] service.FidoService.getCredentialIdByName: " + credential.toString());
-            credentialIds.add(credential.getPublicKey());
+            credentialIds.add(credential.getCredentialId());
         }
 
         // 结束session
@@ -106,16 +109,16 @@ public class FidoService {
     }
 
     /**
-     * 通过用户名获取对应的id，从而获取用户对应的唯一句柄
+     * 通过用户名获取对应的用户handle
      *
      * @param username 用户名
-     * @return 用户id
+     * @return 用户handle
      */
-    public int getIdByName(String username) {
+    public byte[] getUserHandleByUserName(String username) {
         // 判断用户名是否存在
         if (isRegistered(username)) {
             System.out.println("[+] service.FidoService.getIdByName: Username " + username + " doesn't exist.");
-            return -1;
+            return null;
         }
 
         // 通过连接池获取session，并得到对应mapper
@@ -129,6 +132,67 @@ public class FidoService {
         // 结束session
         sqlSession.close();
 
-        return user.getId();
+        return user.getUserHandle();
+    }
+
+    /**
+     * 通过用户handle获取对应的用户名
+     *
+     * @param userHandle 用户的handle
+     * @return 用户名
+     */
+    public String getUserNameByUserHandle(byte[] userHandle) {
+        // 通过连接池获取session，并得到对应mapper
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        FidoUserMapper fidoUserMapper = sqlSession.getMapper(FidoUserMapper.class);
+
+        // 查询handle对应的FidoUser对象
+        FidoUser user = fidoUserMapper.getUserByHandle(userHandle);
+        System.out.println("[+] service.FidoService.getIdByName: " + user);
+
+        // 结束session
+        sqlSession.close();
+
+        return user.getUserName();
+    }
+
+    /**
+     * 通过凭证id和用户handle得到对应唯一的凭证
+     *
+     * @param credentialId 凭证id
+     * @param userHandle   用户handle
+     * @return 唯一凭证
+     */
+    public Credential getCredentialByCredentialIdAndUserHandle(byte[] credentialId, byte[] userHandle) {
+        // 通过连接池获取session，并得到对应mapper
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        CredentialMapper credentialMapper = sqlSession.getMapper(CredentialMapper.class);
+
+        // 查询对应的凭证
+        Credential credential = credentialMapper.getCredentialByCredentialIdAndUserHandle(credentialId, userHandle);
+
+        // 结束session
+        sqlSession.close();
+
+        return credential;
+    }
+
+    /**
+     * 获取凭证id对应的所有凭证
+     * @param credentialId 凭证id
+     * @return 凭证id对应的凭证列表
+     */
+    public List<Credential> getCredentialsByCredentialId(byte[] credentialId) {
+        // 通过连接池获取session，并得到对应mapper
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        CredentialMapper credentialMapper = sqlSession.getMapper(CredentialMapper.class);
+
+        // 查询凭证id对应的所有凭证
+        List<Credential> credentialList = credentialMapper.getCredentialByCredentialId(credentialId);
+
+        // 结束session
+        sqlSession.close();
+
+        return credentialList;
     }
 }

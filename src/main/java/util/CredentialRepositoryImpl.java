@@ -5,13 +5,10 @@ import com.yubico.webauthn.RegisteredCredential;
 import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.PublicKeyCredentialDescriptor;
 import com.yubico.webauthn.data.PublicKeyCredentialType;
+import pojo.Credential;
 import service.FidoService;
 
-import java.nio.ByteBuffer;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class CredentialRepositoryImpl implements CredentialRepository {
     private FidoService service = new FidoService();
@@ -57,19 +54,9 @@ public class CredentialRepositoryImpl implements CredentialRepository {
      */
     @Override
     public Optional<ByteArray> getUserHandleForUsername(String username) {
-        // 获取用户的id作为句柄
-        int id = service.getIdByName(username);
+        byte[] handle = service.getUserHandleByUserName(username);
 
-        // 用户名不存在
-        if (id == -1) {
-            return null;
-        }
-
-        // 将int类型转换为ByteArray类型
-        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
-        buffer.putInt(id);
-        byte[] idBytes = buffer.array();
-        return Optional.of(new ByteArray(idBytes));
+        return Optional.of(new ByteArray(handle));
     }
 
     /**
@@ -78,12 +65,14 @@ public class CredentialRepositoryImpl implements CredentialRepository {
      * Get the username corresponding to the given user handle - the inverse of getUserHandleForUsername(String).
      * Used to look up the username based on the user handle, for username-less authentication ceremonies.
      *
-     * @param userHandle
-     * @return
+     * @param userHandle 用户对应的唯一句柄
+     * @return 用户名
      */
     @Override
     public Optional<String> getUsernameForUserHandle(ByteArray userHandle) {
-        return Optional.empty();
+        String username = service.getUserNameByUserHandle(userHandle.getBytes());
+
+        return Optional.ofNullable(username);
     }
 
     /**
@@ -92,13 +81,27 @@ public class CredentialRepositoryImpl implements CredentialRepository {
      * Look up the public key and stored signature count for the given credential registered to the given user.
      * The returned RegisteredCredential is not expected to be long-lived. It may be read directly from a database or assembled from other components.
      *
-     * @param credentialId
-     * @param userHandle
-     * @return
+     * @param credentialId 凭证id
+     * @param userHandle   用户handle
+     * @return 返回凭证id和用户handle对应的已经注册的RegisteredCredential
      */
     @Override
     public Optional<RegisteredCredential> lookup(ByteArray credentialId, ByteArray userHandle) {
-        return Optional.empty();
+        // 查询凭证信息
+        Credential credential = service.getCredentialByCredentialIdAndUserHandle(credentialId.getBytes(), userHandle.getBytes());
+
+        // 构造返回对象
+        if (credential != null) {
+            RegisteredCredential registeredCredential = RegisteredCredential.builder()
+                    .credentialId(new ByteArray(credential.getCredentialId()))
+                    .userHandle(new ByteArray(credential.getUserHandle()))
+                    .publicKeyCose(new ByteArray(credential.getPublicKeyCose()))
+                    .signatureCount(credential.getSignatureCount())
+                    .build();
+            return Optional.of(registeredCredential);
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -107,11 +110,25 @@ public class CredentialRepositoryImpl implements CredentialRepository {
      * Look up all credentials with the given credential ID, regardless of what user they're registered to.
      * This is used to refuse registration of duplicate credential IDs. Therefore, under normal circumstances this method should only return zero or one credential (this is an expected consequence, not an interface requirement).
      *
-     * @param credentialId
-     * @return
+     * @param credentialId 凭证id
+     * @return 凭证id对应的所有凭证的列表
      */
     @Override
     public Set<RegisteredCredential> lookupAll(ByteArray credentialId) {
-        return null;
+        // 获取凭证列表
+        List<Credential> credentials = service.getCredentialsByCredentialId(credentialId.getBytes());
+
+        // 构造返回对象
+        Set<RegisteredCredential> registeredCredentials = new HashSet<>();
+        for (Credential credential : credentials) {
+            RegisteredCredential registeredCredential = RegisteredCredential.builder()
+                    .credentialId(new ByteArray(credential.getCredentialId()))
+                    .userHandle(new ByteArray(credential.getUserHandle()))
+                    .publicKeyCose(new ByteArray(credential.getPublicKeyCose()))
+                    .signatureCount(credential.getSignatureCount())
+                    .build();
+            registeredCredentials.add(registeredCredential);
+        }
+        return registeredCredentials;
     }
 }

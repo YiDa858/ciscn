@@ -2,12 +2,12 @@ package mapper;
 
 import pojo.FidoUser;
 
-import java.util.List;
-
 public interface FidoUserMapper {
-    FidoUser getUserByID(int userid);
+    FidoUser getUserByID(int userId);
 
-    FidoUser getUserByName(String username);
+    FidoUser getUserByName(String userName);
+
+    FidoUser getUserByHandle(byte[] userHandle);
 
     void insertNewUser(FidoUser fidoUser);
 }
