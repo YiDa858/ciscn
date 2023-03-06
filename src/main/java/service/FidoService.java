@@ -43,7 +43,7 @@ public class FidoService {
      *
      * @param username 用户名
      */
-    public void RegisterFidoUser(String username, byte[] userHanle) {
+    public void RegisterFidoUser(String username, byte[] userHandle) {
         // 判断用户名是否已经注册过
         if (isRegistered(username)) {
             System.out.println("[+] service.FidoService.RegisterFidoUser: Username " + username + " is already in use.");
@@ -59,7 +59,7 @@ public class FidoService {
         // 新建FidoUser对象并注册
         FidoUser fidoUser = new FidoUser();
         fidoUser.setUserName(username);
-        fidoUser.setUserHandle(userHanle);
+        fidoUser.setUserHandle(userHandle);
 
         fidoUserMapper.insertNewUser(fidoUser);
         System.out.println("[+] service.FidoService.RegisterFidoUser: " + fidoUser);
