@@ -9,5 +9,5 @@ public interface FidoUserMapper {
 
     FidoUser getUserByHandle(byte[] userHandle);
 
-    void insertNewUser(FidoUser fidoUser);
+    int insertNewUser(FidoUser fidoUser);
 }

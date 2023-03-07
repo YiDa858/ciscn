@@ -1,12 +1,12 @@
 package service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.yubico.webauthn.FinishRegistrationOptions;
+import com.yubico.webauthn.RegistrationResult;
 import com.yubico.webauthn.RelyingParty;
 import com.yubico.webauthn.StartRegistrationOptions;
-import com.yubico.webauthn.data.ByteArray;
-import com.yubico.webauthn.data.PublicKeyCredentialCreationOptions;
-import com.yubico.webauthn.data.RelyingPartyIdentity;
-import com.yubico.webauthn.data.UserIdentity;
+import com.yubico.webauthn.data.*;
+import com.yubico.webauthn.exception.RegistrationFailedException;
 import mapper.CredentialMapper;
 import mapper.FidoUserMapper;
 import org.apache.ibatis.session.SqlSession;
@@ -16,42 +16,126 @@ import pojo.FidoUser;
 import util.CredentialRepositoryImpl;
 import util.SqlSessionFactoryUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.io.IOException;
+import java.util.*;
 
 public class FidoService {
     private SqlSessionFactory sqlSessionFactory = SqlSessionFactoryUtils.getSqlSessionFactory();
     private RelyingPartyIdentity relyingPartyIdentity;
     private RelyingParty rp;
     private Random random;
+    private String fidoServiceID = "FidoServiceID";
+    private String fidoServiceName = "FidoServiceID";
+    private PublicKeyCredentialCreationOptions request;
 
 
     public FidoService() {
+    }
 
+    public void registerNewUser(String username) throws IOException {
+        String credentialCreateJson = startRegisterNewUser(username);
+        //TODO:发送凭证credentialCreateJson到客户端
+        //TODO:接收客户端公钥publicKeyCredentialJson
+        String publicKeyCredentialJson = getRegisterResponse();
+        registerResponse(publicKeyCredentialJson,username);
     }
 
     /**
-     * 构造器
+     * 凭证存入数据库
+     * @param username 用户名
+     * @param keyId credentialId 凭证ID
+     * @param publicKeyCose publicKeyCose
+     * @param signatureCount signatureCount
+     * @param attestationObject attestationObject
+     * @param clientDataJSON clientDataJSON
+     * @param uuid 传入生成的uuid，即userHandle
+     */
+    public void storeCredential(String username, PublicKeyCredentialDescriptor keyId, ByteArray publicKeyCose, long signatureCount, ByteArray attestationObject, ByteArray clientDataJSON, String uuid) {
+        //TODO:凭证持久化存储
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        FidoUserMapper fidoUserMapper = sqlSession.getMapper(FidoUserMapper.class);
+        CredentialMapper credentialMapper = sqlSession.getMapper(CredentialMapper.class);
+
+        //存储用户表
+        FidoUser fidoUser=new FidoUser();
+        fidoUser.setUserName(username);
+        fidoUser.setUserHandle(uuid.getBytes());
+        int uid = fidoUserMapper.insertNewUser(fidoUser);
+
+        //存储凭证
+        credentialMapper.insertNewCredential(keyId.getId().getBytes(),uid,uuid.getBytes(),publicKeyCose.getBytes(),(int)signatureCount);
+
+        sqlSession.close();
+    }
+
+    /**
+     * 接收客户端公钥
+     * @return
+     */
+    public String getRegisterResponse(){
+        //TODO:接收客户端公钥
+        return null;
+    }
+
+    /**
+     * 接受客户端产生的公钥凭证并解析，存储在本地
+     * @param publicKeyCredentialJson 客户端发送的公钥，为JSON字符串格式。publicKeyCredential from client.
+     */
+    public void registerResponse(String publicKeyCredentialJson,String username) throws IOException {
+        PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
+                PublicKeyCredential.parseRegistrationResponseJson(publicKeyCredentialJson);
+        try {
+            RegistrationResult result = rp.finishRegistration(FinishRegistrationOptions.builder()
+                    .request(request)  // The PublicKeyCredentialCreationOptions from startRegistration above
+                                        // NOTE: Must be stored in server memory or otherwise protected against tampering
+                    .response(pkc)
+                    .build());
+            storeCredential(             // Some database access method of your own design
+                    username,                   // Username or other appropriate user identifier
+                    result.getKeyId(),         // Credential ID and transports for allowCredentials
+                    result.getPublicKeyCose(), // Public key for verifying authentication signatures
+                    result.getSignatureCount(),   // Initial signature counter value
+                    pkc.getResponse().getAttestationObject(), // Store attestation object for future reference
+                    pkc.getResponse().getClientDataJSON(),    // Store client data for re-verifying signature if needed
+                    generateUUID()                             //生成uuid
+            );
+        } catch (RegistrationFailedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成uuid
+     * @return uuid
+     */
+    public String generateUUID(){
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        return uuid;
+    }
+
+    /**
+     * 注册新用户
      * 实例化RelyingParty
      * RelyingParty类是该库的主要入口点。可以使用它的生成器方法来实例化它，并将CredentialRepositoryImpl()实现
+     * @param userName
+     * @return 返回一个JSON字符串发送给客户端
+     * @throws JsonProcessingException
      */
-    public String registerNewUser(String userName) throws JsonProcessingException {
+    public String startRegisterNewUser(String userName) throws JsonProcessingException {
         random = new Random();
 
 //        实例化RelyingParty
         relyingPartyIdentity = RelyingPartyIdentity.builder()
-                .id("FidoServerID")  // Set this to a parent domain that covers all subdomains
+                .id(fidoServiceID)  // Set this to a parent domain that covers all subdomains
                 // where users' credentials should be valid
-                .name("FidoServer")
+                .name(fidoServiceName)
                 .build();
         rp = RelyingParty.builder()
                 .identity(relyingPartyIdentity)
                 .credentialRepository(new CredentialRepositoryImpl())
                 .build();
 
-        PublicKeyCredentialCreationOptions request = rp.startRegistration(StartRegistrationOptions.builder()
+        request = rp.startRegistration(StartRegistrationOptions.builder()
                 .user(
                         findExistingUser(userName)
                                 .orElseGet(() -> {
@@ -74,7 +158,7 @@ public class FidoService {
      * 根据用户名查找存在的用户
      *
      * @param username
-     * @return
+     * @return Optional<UserIdentity> 由FidoUser转成的UserIdentity返回
      */
     Optional<UserIdentity> findExistingUser(String username) {
         // 通过连接池获取session，并得到对应mapper

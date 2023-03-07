@@ -1,5 +1,6 @@
 package mapper;
 
+import org.apache.ibatis.annotations.Param;
 import pojo.Credential;
 
 import java.util.List;
@@ -19,5 +20,9 @@ public interface CredentialMapper {
 
     Credential getCredentialByCredentialIdAndUserHandle(byte[] credentialId, byte[] userHandle);
 
-    void insertNewCredential(byte[] credentialId, int userId, byte[] userHandle, byte[] publicKeyCose, int signatureCount);
+    void insertNewCredential(@Param("credentialId") byte[] credentialId,
+                             @Param("userId") int userId,
+                             @Param("userHandle") byte[] userHandle,
+                             @Param("publicKeyCose") byte[] publicKeyCose,
+                             @Param("signatureCount") int signatureCount);
 }
