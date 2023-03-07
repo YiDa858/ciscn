@@ -5,21 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af3d121a-7877-4b2c-87b6-c1d679c03153" name="变更" comment="2023.3.5 21：58">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FIDO/FidoServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FIDO/FidoServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/service/FidoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/service/FidoService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/util/CredentialRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/util/CredentialRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/file_list.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/file_list.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ciscn.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/FidoUserMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/FidoUserMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/old/FIDO/FidoServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pojo/FidoUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pojo/FidoUser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/service/FidoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/service/FidoService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/util/CredentialRepositoryImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/util/CredentialRepositoryImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/web/RegisterFidoServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/web/RegisterFidoServlet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/TestFidoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/TestFidoService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/TestFidoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestFidoService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev4FIDO" />
+        <entry key="$PROJECT_DIR$" value="liu" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -82,11 +72,11 @@
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Smart Tomcat.Tomcat 10">
+  <component name="RunManager" selected="JUnit.TestFidoService.testRegisterNewUser">
     <configuration name="FidoServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FIDO.FidoServer" />
       <module name="ciscn" />
@@ -114,6 +104,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TestFidoService.testRegisterNewUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ciscn" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestFidoService" />
+      <option name="METHOD_NAME" value="testRegisterNewUser" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Tomcat 10" type="com.poratu.idea.plugins.tomcat">
       <predefined_log_file enabled="true" id="Tomcat Localhost Log" />
       <predefined_log_file enabled="true" id="Tomcat Access Log" />
@@ -136,6 +136,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="JUnit.TestFidoService.testRegisterNewUser" />
       <item itemvalue="Smart Tomcat.Tomcat 10" />
       <item itemvalue="应用程序.FidoServer" />
       <item itemvalue="应用程序.FidoServerTest" />
@@ -143,9 +144,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestFidoService.testRegisterNewUser" />
         <item itemvalue="应用程序.Main" />
         <item itemvalue="应用程序.FidoServerTest" />
         <item itemvalue="应用程序.FidoServer" />
+        <item itemvalue="应用程序.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -167,6 +170,7 @@
       <workItem from="1678093522762" duration="2007000" />
       <workItem from="1678096962761" duration="1938000" />
       <workItem from="1678125301246" duration="1023000" />
+      <workItem from="1678169444158" duration="635000" />
     </task>
     <task id="LOCAL-00001" summary="init new branch">
       <created>1677771731404</created>
@@ -223,6 +227,16 @@
     <MESSAGE value="创建数据库连接，添加服务器用户注册方法" />
     <MESSAGE value="2023.3.5 21：58" />
     <option name="LAST_COMMIT_MESSAGE" value="2023.3.5 21：58" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.StackOverflowError" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

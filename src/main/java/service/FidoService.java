@@ -1,8 +1,10 @@
 package service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yubico.webauthn.RelyingParty;
 import com.yubico.webauthn.StartRegistrationOptions;
 import com.yubico.webauthn.data.ByteArray;
+import com.yubico.webauthn.data.PublicKeyCredentialCreationOptions;
 import com.yubico.webauthn.data.RelyingPartyIdentity;
 import com.yubico.webauthn.data.UserIdentity;
 import mapper.CredentialMapper;
@@ -16,18 +18,27 @@ import util.SqlSessionFactoryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 public class FidoService {
-    SqlSessionFactory sqlSessionFactory = SqlSessionFactoryUtils.getSqlSessionFactory();
-    RelyingPartyIdentity relyingPartyIdentity;
-    RelyingParty rp;
+    private SqlSessionFactory sqlSessionFactory = SqlSessionFactoryUtils.getSqlSessionFactory();
+    private RelyingPartyIdentity relyingPartyIdentity;
+    private RelyingParty rp;
+    private Random random;
+
+
+    public FidoService() {
+
+    }
 
     /**
      * 构造器
      * 实例化RelyingParty
      * RelyingParty类是该库的主要入口点。可以使用它的生成器方法来实例化它，并将CredentialRepositoryImpl()实现
      */
-    public FidoService() {
+    public String registerNewUser(String userName) throws JsonProcessingException {
+        random= new Random();
         relyingPartyIdentity = RelyingPartyIdentity.builder()
                 .id("FidoServerID")  // Set this to a parent domain that covers all subdomains
                 // where users' credentials should be valid
@@ -37,6 +48,23 @@ public class FidoService {
                 .identity(relyingPartyIdentity)
                 .credentialRepository(new CredentialRepositoryImpl())
                 .build();
+        PublicKeyCredentialCreationOptions request = rp.startRegistration(StartRegistrationOptions.builder()
+                .user(
+                        findExistingUser(userName)
+                                .orElseGet(() -> {
+                                    byte[] userHandle = new byte[64];
+                                    random.nextBytes(userHandle);
+                                    return UserIdentity.builder()
+                                            .name(userName)
+                                            .displayName(userName)
+                                            .id(new ByteArray(userHandle))
+                                            .build();
+                                })
+                )
+                .build());
+
+        String credentialCreateJson = request.toCredentialsCreateJson();
+        return credentialCreateJson;
     }
 
     /**
@@ -220,20 +248,27 @@ public class FidoService {
         return credentialList;
     }
 
-    public void registerNewUser() {
-        rp.startRegistration(StartRegistrationOptions.builder()
-                .user(
-                        findExistingUser("alice")
-                                .orElseGet(() -> {
-                                    byte[] userHandle = new byte[64];
-                                    random.nextBytes(userHandle);
-                                    return UserIdentity.builder()
-                                            .name("alice")
-                                            .displayName("Alice Hypothetical")
-                                            .id(new ByteArray(userHandle))
-                                            .build();
-                                })
-                )
+    /**
+     * 根据用户名查找存在的用户
+     * @param username
+     * @return
+     */
+    Optional<UserIdentity> findExistingUser(String username) {
+        // 通过连接池获取session，并得到对应mapper
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        FidoUserMapper fidoUserMapper = sqlSession.getMapper(FidoUserMapper.class);
+
+        // 通过用户名查询用户
+        FidoUser user = fidoUserMapper.getUserByName(username);
+        System.out.println("[+] service.FidoService.isRegistered: " + user);
+
+        // 结束session
+        sqlSession.close();
+        return Optional.of(UserIdentity.builder()
+                .name(user.getUserName())
+                .displayName(user.getUserName())
+                .id(new ByteArray(user.getUserHandle()))
                 .build());
     }
+
 }

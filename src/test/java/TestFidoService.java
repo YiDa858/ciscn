@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Test;
 import service.FidoService;
 
@@ -24,5 +25,12 @@ public class TestFidoService {
         System.out.println(Arrays.toString(testPubKey));
 
         fidoService.RegisterFidoUser("Xie", testPubKey);
+    }
+
+    @Test
+    public void testRegisterNewUser() throws JsonProcessingException {
+        FidoService fidoService = new FidoService();
+        String liu = fidoService.registerNewUser("Liu");
+        System.out.println(liu);
     }
 }

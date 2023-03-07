@@ -6,6 +6,7 @@ import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.PublicKeyCredentialDescriptor;
 import com.yubico.webauthn.data.PublicKeyCredentialType;
 import pojo.Credential;
+import pojo.FidoUser;
 import service.FidoService;
 
 import java.util.*;
