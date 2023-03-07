@@ -1,11 +1,17 @@
 package service;
 
+import com.yubico.webauthn.RelyingParty;
+import com.yubico.webauthn.StartRegistrationOptions;
+import com.yubico.webauthn.data.ByteArray;
+import com.yubico.webauthn.data.RelyingPartyIdentity;
+import com.yubico.webauthn.data.UserIdentity;
 import mapper.CredentialMapper;
 import mapper.FidoUserMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pojo.Credential;
 import pojo.FidoUser;
+import util.CredentialRepositoryImpl;
 import util.SqlSessionFactoryUtils;
 
 import java.util.ArrayList;
@@ -13,8 +19,24 @@ import java.util.List;
 
 public class FidoService {
     SqlSessionFactory sqlSessionFactory = SqlSessionFactoryUtils.getSqlSessionFactory();
+    RelyingPartyIdentity relyingPartyIdentity;
+    RelyingParty rp;
 
+    /**
+     * 构造器
+     * 实例化RelyingParty
+     * RelyingParty类是该库的主要入口点。可以使用它的生成器方法来实例化它，并将CredentialRepositoryImpl()实现
+     */
     public FidoService() {
+        relyingPartyIdentity = RelyingPartyIdentity.builder()
+                .id("FidoServerID")  // Set this to a parent domain that covers all subdomains
+                // where users' credentials should be valid
+                .name("FidoServer")
+                .build();
+        rp = RelyingParty.builder()
+                .identity(relyingPartyIdentity)
+                .credentialRepository(new CredentialRepositoryImpl())
+                .build();
     }
 
     /**
@@ -49,6 +71,7 @@ public class FidoService {
             System.out.println("[+] service.FidoService.RegisterFidoUser: Username " + username + " is already in use.");
             return;
         }
+
 
         // 通过连接池获取session，并得到对应mapper
         SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -179,6 +202,7 @@ public class FidoService {
 
     /**
      * 获取凭证id对应的所有凭证
+     *
      * @param credentialId 凭证id
      * @return 凭证id对应的凭证列表
      */
@@ -194,5 +218,22 @@ public class FidoService {
         sqlSession.close();
 
         return credentialList;
+    }
+
+    public void registerNewUser() {
+        rp.startRegistration(StartRegistrationOptions.builder()
+                .user(
+                        findExistingUser("alice")
+                                .orElseGet(() -> {
+                                    byte[] userHandle = new byte[64];
+                                    random.nextBytes(userHandle);
+                                    return UserIdentity.builder()
+                                            .name("alice")
+                                            .displayName("Alice Hypothetical")
+                                            .id(new ByteArray(userHandle))
+                                            .build();
+                                })
+                )
+                .build());
     }
 }

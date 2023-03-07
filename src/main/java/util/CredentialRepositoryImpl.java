@@ -9,6 +9,7 @@ import pojo.Credential;
 import service.FidoService;
 
 import java.util.*;
+import java.nio.ByteBuffer;
 
 public class CredentialRepositoryImpl implements CredentialRepository {
     private FidoService service = new FidoService();
