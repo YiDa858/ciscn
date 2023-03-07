@@ -38,7 +38,9 @@ public class FidoService {
      * RelyingParty类是该库的主要入口点。可以使用它的生成器方法来实例化它，并将CredentialRepositoryImpl()实现
      */
     public String registerNewUser(String userName) throws JsonProcessingException {
-        random= new Random();
+        random = new Random();
+
+//        实例化RelyingParty
         relyingPartyIdentity = RelyingPartyIdentity.builder()
                 .id("FidoServerID")  // Set this to a parent domain that covers all subdomains
                 // where users' credentials should be valid
@@ -48,6 +50,7 @@ public class FidoService {
                 .identity(relyingPartyIdentity)
                 .credentialRepository(new CredentialRepositoryImpl())
                 .build();
+
         PublicKeyCredentialCreationOptions request = rp.startRegistration(StartRegistrationOptions.builder()
                 .user(
                         findExistingUser(userName)
@@ -68,6 +71,30 @@ public class FidoService {
     }
 
     /**
+     * 根据用户名查找存在的用户
+     *
+     * @param username
+     * @return
+     */
+    Optional<UserIdentity> findExistingUser(String username) {
+        // 通过连接池获取session，并得到对应mapper
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        FidoUserMapper fidoUserMapper = sqlSession.getMapper(FidoUserMapper.class);
+
+        // 通过用户名查询用户
+        FidoUser user = fidoUserMapper.getUserByName(username);
+        System.out.println("[+] service.FidoService.findExistingUser: " + user);
+
+        // 结束session
+        sqlSession.close();
+        return Optional.of(UserIdentity.builder()
+                .name(user.getUserName())
+                .displayName(user.getUserName())
+                .id(new ByteArray(user.getUserHandle()))
+                .build());
+    }
+
+    /**
      * 通过username判断用户是否注册
      *
      * @param username 用户名
@@ -85,7 +112,7 @@ public class FidoService {
         // 结束session
         sqlSession.close();
 
-        return (user != null);
+        return (user == null);
     }
 
     /**
@@ -246,29 +273,6 @@ public class FidoService {
         sqlSession.close();
 
         return credentialList;
-    }
-
-    /**
-     * 根据用户名查找存在的用户
-     * @param username
-     * @return
-     */
-    Optional<UserIdentity> findExistingUser(String username) {
-        // 通过连接池获取session，并得到对应mapper
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        FidoUserMapper fidoUserMapper = sqlSession.getMapper(FidoUserMapper.class);
-
-        // 通过用户名查询用户
-        FidoUser user = fidoUserMapper.getUserByName(username);
-        System.out.println("[+] service.FidoService.isRegistered: " + user);
-
-        // 结束session
-        sqlSession.close();
-        return Optional.of(UserIdentity.builder()
-                .name(user.getUserName())
-                .displayName(user.getUserName())
-                .id(new ByteArray(user.getUserHandle()))
-                .build());
     }
 
 }

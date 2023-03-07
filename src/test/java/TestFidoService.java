@@ -31,6 +31,6 @@ public class TestFidoService {
     public void testRegisterNewUser() throws JsonProcessingException {
         FidoService fidoService = new FidoService();
         String liu = fidoService.registerNewUser("Liu");
-        System.out.println(liu);
+        System.out.println("@Test.testRegisterNewUser:"+liu);
     }
 }
