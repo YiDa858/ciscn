@@ -65,6 +65,12 @@
             <version>2.4.0</version>
             <scope>compile</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/pl.iterators/kebs-opaque -->
+        <!--<dependency>-->
+        <!--    <groupId>pl.iterators</groupId>-->
+        <!--    <artifactId>kebs-opaque_3</artifactId>-->
+        <!--    <version>1.9.5</version>-->
+        <!--</dependency>-->
         <!-- https://mvnrepository.com/artifact/com.yubico/webauthn-server-attestation -->
         <!--<dependency>-->
         <!--    <groupId>com.yubico</groupId>-->
